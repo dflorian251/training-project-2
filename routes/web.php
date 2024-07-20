@@ -23,10 +23,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/locations', [LocationController::class, 'index'])->name('locations');
+
+    Route::post('/locations/submit-location', [LocationController::class, 'store'])->name('submit-location');
 });
 
-Route::get('/locations', [LocationController::class, 'index'])->name('locations');
 
-Route::post('/locations/submit-location', [LocationController::class, 'store'])->name('submit-location');
 
 require __DIR__.'/auth.php';

@@ -5,13 +5,19 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Location;
-use League\Flysystem\Visibility;
+use Illuminate\Support\Facades\Gate;
 
 class LocationController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Locations');
+        $response = Gate::inspect('is-admin');
+        if($response->allowed()) {
+            return Inertia::render('Locations');
+        } else {
+            return Inertia::render('ErrorPage');
+        }
+
     }
 
     public function store(Request $request)
