@@ -156,6 +156,13 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $response = Gate::inspect('is-admin');
+        if($response->allowed()) {
+            $user = User::findOrFail($id);
+            $user->delete();
+            return redirect()->route('users');
+        } else {
+            return Inertia::render('ErrorPage');
+        }
     }
 }

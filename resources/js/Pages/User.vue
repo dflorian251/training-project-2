@@ -28,6 +28,22 @@ const fetchData = async () => {
     }
 };
 
+const deleteUser = async (id) => {
+    try {
+        await axios.delete(`/training-project-2/public/delete-user/${id}`)
+            .then(response => {
+                console.log(`Post successfully deleted: ${response}`);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        // Optionally, remove the user from the users array or refetch the user list
+        users.value = users.value.filter(user => user.id !== id);
+    } catch (error) {
+        console.error('Error deleting user:', error);
+    }
+};
+
 
 onMounted(() => {
     fetchData();
@@ -58,8 +74,11 @@ onMounted(() => {
                         <PrimaryButton class="bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-600 focus:ring-opacity-50 active:bg-yellow-800">
                             <a :href="'/training-project-2/public/users/edit-user/' + String(user.id)">Edit</a>
                         </PrimaryButton>
-                        <PrimaryButton class="ml-3 bg-red-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-opacity-50 active:bg-red-800">
-                            <a :href="'/training-project-2/public/users/delete-user/' + String(user.id)">Delete</a>
+                        <!-- <PrimaryButton class="ml-3 bg-red-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-opacity-50 active:bg-red-800">
+                            <a :href="'/training-project-2/public/delete-user/' + String(user.id)" method="DELETE">Delete</a>
+                        </PrimaryButton> -->
+                        <PrimaryButton @click.prevent="deleteUser(user.id)" class="ml-3 bg-red-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-opacity-50 active:bg-red-800">
+                            Delete
                         </PrimaryButton>
                     </div>
                     <div v-else-if="name == user.name">
