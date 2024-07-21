@@ -59,6 +59,7 @@ export default {
 			this.map.addListener('click', this.mapClicked);
 
 			this.getMarkers();
+            this.displayMarkers();
 		},
         async getMarkers() {
             try {
@@ -72,7 +73,13 @@ export default {
             } catch (error) {
                 console.error('Error deleting user:', error);
             }
-
+        },
+        displayMarkers() {
+            const marker = new google.maps.Marker({
+                position: {lat: 39.62, lng: 19.91},
+                map: this.map,
+            });
+            this.markers.push(marker);
         },
 		// initMarkers() {
 		// 	for (let index = 0; index < this.initialMarkers.length; index++) {
