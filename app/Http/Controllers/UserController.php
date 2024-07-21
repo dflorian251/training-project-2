@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
 class UserController extends Controller
@@ -104,7 +105,7 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function editUserPage(string $id)
     {
         $response = Gate::inspect('is-admin');
         if($response->allowed() || strval(Auth::user()->id) === $id) {
@@ -139,14 +140,14 @@ class UserController extends Controller
                 $user->password = Hash::make($request->password);
             }
             if ($request->filled('role')) {
-                $user->admin = $request->role === 'admin' ? 1 : 0;
+                $user->role = $request->role;
             }
             // Save the user
-            $user->save();
+            $user->update();
 
-            return redirect()->route('users.index')->with('success', 'User updated successfully.');
+            return response()->json(['success' => true, 'redirect_url' => route('users.index')]);
         } catch (\Exception $e) {
-            return redirect()->route('users.index')->with('error', 'Failed to update user.');
+            return response()->json(['message' => 'Problem occurred']);
         }
     }
 

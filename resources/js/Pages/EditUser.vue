@@ -4,8 +4,9 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head } from '@inertiajs/vue3';
 import { ref, onMounted, defineProps } from 'vue';
+import { router } from '@inertiajs/vue3';
 
 
 const props = defineProps({
@@ -44,8 +45,8 @@ const errors = ref({});
 
 const submit = async () => {
     try {
-        const response = await axios.post(`/training-project-2/public/users/update-user/${props.id}`, form.value);
-        console.log('User updated successfully', response.data);
+        const response = await axios.patch(`/training-project-2/public/users/update-user/${props.id}`, form.value);
+        console.log('User updated successfully', response);
         form.value = {
             name: '',
             email: '',
@@ -53,6 +54,10 @@ const submit = async () => {
             password: '',
             password_confirmation: '',
         };
+        if (response.data.success) {
+            // Redirect using Inertia's router
+            router.visit(response.data.redirect_url);
+        }
     } catch (error) {
         if (error.response && error.response.status === 422) {
             // Handle validation errors
@@ -75,6 +80,7 @@ onMounted(() => {
 
             <form @submit.prevent="submit" class="w-full max-w-lg bg-white p-8 rounded-lg shadow-md">
                 <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Edit User</h1>
+
                 <div>
                     <InputLabel for="name" value="Name" />
 

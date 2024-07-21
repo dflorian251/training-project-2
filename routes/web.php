@@ -43,15 +43,10 @@ Route::middleware('auth')->group(function () {
 
         Route::post('/store-user', [UserController::class, 'store'])->name('users.store');
 
-        Route::get('/edit-user/{id}', [UserController::class, 'edit'])->name('users.edit');
+        Route::get('/edit-user/{id}', [UserController::class, 'editUserPage'])->name('users.edit');
 
-        Route::post('/update-user/{id}', [UserController::class, 'update'])->name('users.update');
+        Route::patch('/update-user/{id}', [UserController::class, 'update'])->name('users.update');
     });
-
-
-
-
-
 });
 
 
