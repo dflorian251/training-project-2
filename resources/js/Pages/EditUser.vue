@@ -44,7 +44,7 @@ const errors = ref({});
 
 const submit = async () => {
     try {
-        const response = await axios.post(`/training-project-2/public/users/store-edited-user/${props.id}`, form.value);
+        const response = await axios.post(`/training-project-2/public/users/update-user/${props.id}`, form.value);
         console.log('User updated successfully', response.data);
         form.value = {
             name: '',
@@ -108,7 +108,7 @@ onMounted(() => {
 
                 <div class="mt-4" v-if="role == 'admin'">
                     <label for="role" class="block mb-2 text-sm font-medium text-gray-900 white:text-black">Select a role</label>
-                    <!-- DOES NOT WORK THO / MUST RESEARCH HOW TO IMPLEMENT SELECTED OPTION -->
+                    <!-- DOES NOT WORK THO / MUST RESEARCH HOW TO IMPLEMENT A SELECTED OPTION -->
                     <select id="role" v-if="user.role == 'admin'"  v-model="form.role" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 white:bg-gray-700 white:border-gray-600 dark:placeholder-gray-400 white:text dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option selected value="admin">Admin</option>
                         <option value="public">Public</option>

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rules;
+use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 
 class UserController extends Controller
@@ -123,7 +124,30 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+            // Find the user by ID
+            $user = User::findOrFail($id);
+
+            // Update fields if they are provided
+            if ($request->filled('name')) {
+                $user->name = $request->name;
+            }
+            if ($request->filled('email')) {
+                $user->email = $request->email;
+            }
+            if ($request->filled('password')) {
+                $user->password = Hash::make($request->password);
+            }
+            if ($request->filled('role')) {
+                $user->admin = $request->role === 'admin' ? 1 : 0;
+            }
+            // Save the user
+            $user->save();
+
+            return redirect()->route('users.index')->with('success', 'User updated successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('users.index')->with('error', 'Failed to update user.');
+        }
     }
 
     /**
