@@ -38,6 +38,15 @@ class UserController extends Controller
 
     }
 
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
     /**
      * Get the user creation page.
      */
@@ -49,15 +58,6 @@ class UserController extends Controller
         } else {
             return Inertia::render('ErrorPage');
         }
-
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -94,9 +94,10 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function indexUser(string $id)
     {
-        //
+        $user = User::findOrFail($id);
+        return $user;
     }
 
     /**
@@ -104,7 +105,17 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $response = Gate::inspect('is-admin');
+        if($response->allowed() || strval(Auth::user()->id) === $id) {
+            $user = User::findOrFail($id)->get();
+
+            return Inertia::render('EditUser', [
+                'id' => $id,
+                'role' => Auth::user()->role,
+            ]);
+        } else {
+            return Inertia::render('ErrorPage');
+        }
     }
 
     /**
