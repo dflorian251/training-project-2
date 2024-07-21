@@ -32,6 +32,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/map', [MapController::class, 'index'])->name('map');
 
+    Route::get('/get-locations', [MapController::class, 'getLocations']);
+
     Route::get('/get-users', [UserController::class, 'index'])->name('get-users');
 
     Route::get('/get-user/{id}', [UserController::class, 'indexUser'])->name('user.get');
