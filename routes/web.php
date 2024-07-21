@@ -32,7 +32,13 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/map', [MapController::class, 'index'])->name('map');
 
-    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/users', [UserController::class, 'page'])->name('users.index');
+
+    Route::get('/get-users', [UserController::class, 'index'])->name('get-users');
+
+    Route::get('/users/create-user', [UserController::class, 'createUserPage'])->name('users.create');
+
+    Route::post('/users/store-user', [UserController::class, 'store'])->name('users.store');
 });
 
 
