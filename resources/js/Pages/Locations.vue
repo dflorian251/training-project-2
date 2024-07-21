@@ -1,14 +1,14 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { ref } from 'vue';
+import axios from 'axios';
 
 
-const form = useForm({
+const form = ref({
     name: '',
     latitude: '',
     longitude: '',
@@ -17,20 +17,16 @@ const form = useForm({
 });
 
 const submit = async () => {
-  try {
-    const response = await axios.post('/training-project-2/public/locations/submit-location', form.value).then(function (response) {
-        window.location = response.data.redirect;
-    });
-    console.log('Data submitted successfully:', response.data);
-    errors.value = {}; // Clear errors on successful submission
-    if (response.data.redirect_url) {
-        // router.push(response.data.redirect_url); // Redirect to the URL provided by the server
-        this.$router.push('/training-project-1/public/');
-        console.log('Redirected...');
+    console.log(typeof(form.value.visibility));
+    try {
+        await axios.post('/training-project-2/public/locations/submit-location', form.value).then(function (response) {
+            window.location = response.data.redirect;
+            console.log('Data submitted successfully:', response.data);
+        });
+
+    } catch (error) {
+        console.error('There was an error submitting the form:', error);
     }
-  } catch (error) {
-    console.error('There was an error submitting the form:', error);
-  }
 };
 </script>
 
@@ -39,6 +35,9 @@ const submit = async () => {
         <div class="bg-white p-6 rounded shadow-md max-w-md mx-auto mt-6">
             <h1 class="text-3xl text-white bg-gray-800 p-4 rounded mb-6 text-center">Add Location</h1>
             <form @submit.prevent="submit">
+
+                <input type="hidden" name="_token" :value="csrf_token">
+
                 <div>
                     <InputLabel for="name" value="Name" />
 
@@ -52,7 +51,7 @@ const submit = async () => {
                     autocomplete="name"
                     />
 
-                    <InputError class="mt-2" :message="form.errors.name" />
+                    <!-- <InputError class="mt-2" :message="form.errors.name" /> -->
                 </div>
 
                 <div class="mt-4">
@@ -67,7 +66,7 @@ const submit = async () => {
                     autocomplete=""
                     />
 
-                    <InputError class="mt-2" :message="form.errors.latitude" />
+                    <!-- <InputError class="mt-2" :message="form.errors.latitude" /> -->
                 </div>
 
                 <div class="mt-4">
@@ -82,19 +81,19 @@ const submit = async () => {
                     autocomplete=""
                     />
 
-                    <InputError class="mt-2" :message="form.errors.longitude" />
+                    <!-- <InputError class="mt-2" :message="form.errors.longitude" /> -->
                 </div>
 
                 <div class="mt-4">
                     <InputLabel for="visibility" value="Visibility" />
 
-                    <select id="event_visibility" v-model="form.publicity" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 white:bg-gray-700 white:border-gray-600 dark:placeholder-gray-400 white:text dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <select id="event_visibility" v-model="form.visibility" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 white:bg-gray-700 white:border-gray-600 dark:placeholder-gray-400 white:text dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     <option selected>The location is...</option>
                     <option value="public">Public</option>
                     <option value="private">Private</option>
                     </select>
 
-                    <InputError class="mt-2" :message="form.errors.visibility" />
+                    <!-- <InputError class="mt-2" :message="form.errors.visibility" /> -->
                 </div>
 
                 <div class="mt-4">
@@ -108,7 +107,7 @@ const submit = async () => {
                     autocomplete=""
                     />
 
-                    <InputError class="mt-2" :message="form.errors.comment" />
+                    <!-- <InputError class="mt-2" :message="form.errors.comment" /> -->
                 </div>
 
                 <div class="flex items-center justify-end mt-4">

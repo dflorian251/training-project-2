@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('latitude');
             $table->integer('longitude');
             $table->enum('visibility', ['public', 'private']);
-            $table->string('comment');
+            $table->string('comment')->nullable();
             $table->timestamps();
         });
     }
