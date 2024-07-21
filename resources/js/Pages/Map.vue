@@ -1,12 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
-
+import axios from 'axios';
 
 </script>
 
@@ -47,7 +41,7 @@ export default {
 		document.head.appendChild(script);
 	},
 	methods: {
-		initMap() {
+		async initMap() {
 			this.map = new google.maps.Map(document.getElementById('map'), {
 				center: {
 					lat: 39.6243,
@@ -58,71 +52,53 @@ export default {
 
 			this.map.addListener('click', this.mapClicked);
 
-			this.getMarkers();
-            this.displayMarkers();
+			let markers = this.getMarkers();
+            this.displayMarkers(markers);
+
+            try {
+                // Await the getMarkers function to resolve
+                let marks = await this.getMarkers();
+                this.displayMarkers(marks);
+            } catch (error) {
+                console.error('Error initializing markers:', error);
+            }
 		},
         async getMarkers() {
             try {
-                await axios.get(`/training-project-2/public/get-locations`)
-                    .then(response => {
-                        console.log(response.data);
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    });
+                const response = await axios.get(`/training-project-2/public/get-locations`);
+                return response.data;
             } catch (error) {
-                console.error('Error deleting user:', error);
+                // Log and return the error
+                console.error('Error fetching markers:', error);
+                throw error;  // Rethrow error if you want to handle it elsewhere
             }
         },
-        displayMarkers() {
-            const marker = new google.maps.Marker({
-                position: {lat: 39.62, lng: 19.91},
-                map: this.map,
-            });
-            this.markers.push(marker);
+        async displayMarkers(marks) {
+            for (const marker of marks) {
+                console.log(marker.comment);
+                const mark = new google.maps.Marker({
+                    position: {lat: Number(marker.latitude), lng: Number(marker.longitude)},
+                    label: marker.comment,
+                    map: this.map,
+                });
+                console.log(marker);
+                this.markers.push(mark);
+            }
         },
-		// initMarkers() {
-		// 	for (let index = 0; index < this.initialMarkers.length; index++) {
-		// 		const markerData = this.initialMarkers[index];
-		// 		const marker = new google.maps.Marker({
-		// 			position: markerData.position,
-		// 			label: markerData.label,
-		// 			draggable: markerData.draggable,
-		// 			map: this.map,
-		// 		});
-		// 		this.markers.push(marker);
-
-		// 		const infowindow = new google.maps.InfoWindow({
-		// 			content: `<b>${markerData.position.lat}, ${markerData.position.lng}</b>`,
-		// 		});
-		// 		marker.addListener('click', () => {
-		// 			if (this.activeInfoWindow) {
-		// 				this.activeInfoWindow.close();
-		// 			}
-		// 			infowindow.open(this.map, marker);
-		// 			this.activeInfoWindow = infowindow;
-		// 			this.markerClicked(marker, index);
-		// 		});
-
-		// 		marker.addListener('dragend', (event) => {
-		// 			this.markerDragEnd(event, index);
-		// 		});
-		// 	}
+		// mapClicked(event) {
+		// 	console.log(this.map);
+		// 	console.log(event.latLng.lat(), event.latLng.lng());
 		// },
-		mapClicked(event) {
-			console.log(this.map);
-			console.log(event.latLng.lat(), event.latLng.lng());
-		},
-		markerClicked(marker, index) {
-			console.log(this.map);
-			console.log(marker.position.lat());
-			console.log(marker.position.lng());
-		},
-		markerDragEnd(event, index) {
-			console.log(this.map);
-			console.log(event.latLng.lat());
-			console.log(event.latLng.lng());
-		},
+		// markerClicked(marker, index) {
+		// 	console.log(this.map);
+		// 	console.log(marker.position.lat());
+		// 	console.log(marker.position.lng());
+		// },
+		// markerDragEnd(event, index) {
+		// 	console.log(this.map);
+		// 	console.log(event.latLng.lat());
+		// 	console.log(event.latLng.lng());
+		// },
 	},
 };
 </script>
