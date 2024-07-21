@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\MapController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -28,10 +29,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/locations', [LocationController::class, 'index'])->name('locations');
 
     Route::post('/locations/submit-location', [LocationController::class, 'store'])->name('submit-location');
+
+    Route::get('/map', [MapController::class, 'index'])->name('map');
+
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
 });
 
 
 
-Route::get('/map', [MapController::class, 'index'])->name('map');
+
 
 require __DIR__.'/auth.php';
