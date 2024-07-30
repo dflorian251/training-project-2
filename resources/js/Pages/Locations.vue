@@ -38,7 +38,7 @@ const submit = async () => {
             <h1 class="text-3xl text-white bg-gray-800 p-4 rounded mb-6 text-center">Add Location</h1>
             <form @submit.prevent="submit">
 
-                <input type="hidden" name="_token" :value="csrf_token">
+                <!-- <input type="hidden" name="_token" :value="csrf_token"> -->
 
                 <div>
                     <InputLabel for="name" value="Name" />
@@ -62,6 +62,7 @@ const submit = async () => {
                     <input
                     id="latitude"
                     type="number"
+                    step="any"
                     class="mt-1 block w-full"
                     v-model="form.latitude"
                     required
@@ -77,6 +78,7 @@ const submit = async () => {
                     <input
                     id="longitude"
                     type="number"
+                    step="any"
                     class="mt-1 block w-full"
                     v-model="form.longitude"
                     required
