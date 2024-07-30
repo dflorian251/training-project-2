@@ -14,11 +14,12 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        $password = env('ADMIN_PASSWORD');
         DB::table('users')->insert([
             'name' => 'admin',
             'email' => 'admin@test.com',
             'role' => 'admin',
-            'password' => Hash::make('adminadmin'),
+            'password' => Hash::make($password),
         ]);
     }
 }
