@@ -19,6 +19,8 @@ const form = ref({
 const submit = async () => {
     console.log(typeof(form.value.visibility));
     try {
+        // const baseUrl = window.location.origin;
+        // await axios.post(`${baseUrl}/locations/submit-location`, form.value).then(...);
         await axios.post('/training-project-2/public/locations/submit-location', form.value).then(function (response) {
             window.location = response.data.redirect;
             console.log('Data submitted successfully:', response.data);

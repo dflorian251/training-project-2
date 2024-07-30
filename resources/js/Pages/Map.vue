@@ -62,6 +62,8 @@ export default {
 		},
         async getMarkers() {
             try {
+                // const baseUrl = window.location.origin;
+                // const response = await axios.get(`${baseUrl}/get-locations`);
                 const response = await axios.get(`/training-project-2/public/get-locations`);
                 return response.data;
             } catch (error) {

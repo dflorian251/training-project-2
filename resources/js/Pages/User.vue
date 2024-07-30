@@ -20,6 +20,8 @@ let users = ref([]);
 
 const fetchData = async () => {
     try {
+        // const baseUrl = window.location.origin;
+        // const response = await axios.get(`${baseUrl}/get-users`);
         const response = await axios.get('/training-project-2/public/get-users');
         users.value = response.data;
         console.log(users.value);

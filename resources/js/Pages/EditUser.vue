@@ -32,6 +32,8 @@ let user = ref([]);
 
 const fetchData = async () => {
     try {
+        // const baseUrl = window.location.origin;
+        // const response = await axios.get(`${baseUrl}/get-user/${props.id}`);
         const response = await axios.get(`/training-project-2/public/get-user/${props.id}`);
         user.value = response.data;
         user = user.value;
@@ -45,6 +47,7 @@ const errors = ref({});
 
 const submit = async () => {
     try {
+
         const response = await axios.patch(`/training-project-2/public/users/update-user/${props.id}`, form.value);
         console.log('User updated successfully', response);
         form.value = {
