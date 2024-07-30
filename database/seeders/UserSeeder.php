@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class UserSeeder extends Seeder
 {
@@ -14,6 +15,11 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        $exists = User::where('email', 'admin@test.com')->exists();
+        if ($exists) {
+            return ;
+        }
+
         $password = env('ADMIN_PASSWORD');
         DB::table('users')->insert([
             'name' => 'admin',

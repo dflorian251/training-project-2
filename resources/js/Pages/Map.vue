@@ -1,6 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import axios from 'axios';
+// const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker");
 
 </script>
 
@@ -21,7 +22,7 @@ import axios from 'axios';
 
 		  const api_key = import.meta.env.VITE_GMAPS_API_KEY;
 		  const script = document.createElement('script');
-		  script.src = `https://maps.googleapis.com/maps/api/js?key=${api_key}&loading=async&callback=initMap`;
+		  script.src = `https://maps.googleapis.com/maps/api/js?key=${api_key}&loading=async&callback=initMap&libraries=marker`;
 		  script.async = true;
 		  script.onload = () => {
 			  console.log('Google Maps API script loaded.');
@@ -37,6 +38,7 @@ import axios from 'axios';
 			  this.map = new google.maps.Map(document.getElementById('map'), {
 				  center: { lat: 39.6243, lng: 19.9217 },
 				  zoom: 15,
+                  mapId: "d235bbeec95cf835",
 			  });
 
 			  try {
@@ -62,7 +64,7 @@ import axios from 'axios';
 			  }
 
 			  for (const marker of marks) {
-				  const mark = new google.maps.Marker({
+				  const mark = new google.maps.marker.AdvancedMarkerElement({
 					  position: { lat: Number(marker.latitude), lng: Number(marker.longitude) },
 					  label: marker.comment,
 					  map: this.map,
