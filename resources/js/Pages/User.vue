@@ -32,6 +32,8 @@ const fetchData = async () => {
 
 const deleteUser = async (id) => {
     try {
+        // const baseUrl = window.location.origin;
+        // await axios.delete(`${baseUrl}/delete-user/${id}`).then(...)
         await axios.delete(`/training-project-2/public/delete-user/${id}`)
             .then(response => {
                 console.log(`Post successfully deleted: ${response}`);
