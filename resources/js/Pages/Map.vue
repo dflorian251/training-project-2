@@ -52,9 +52,6 @@ export default {
 
 			this.map.addListener('click', this.mapClicked);
 
-			let markers = this.getMarkers();
-            this.displayMarkers(markers);
-
             try {
                 // Await the getMarkers function to resolve
                 let marks = await this.getMarkers();
@@ -74,6 +71,11 @@ export default {
             }
         },
         async displayMarkers(marks) {
+            if (marks) {
+                alert('No locations to display.');
+                return this.markers = [];
+            }
+
             for (const marker of marks) {
                 console.log(marker.comment);
                 const mark = new google.maps.Marker({
