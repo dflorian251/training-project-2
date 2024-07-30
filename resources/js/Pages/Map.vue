@@ -5,114 +5,81 @@ import axios from 'axios';
 </script>
 
 <template>
-
-    <AuthenticatedLayout>
-        <div>
-            <h1 class="text-center">Laravel Google Maps</h1>
-            <div id="map"></div>
-        </div>
-    </AuthenticatedLayout>
+	<AuthenticatedLayout>
+	  <div>
+		<h1 class="text-center">Laravel Google Maps</h1>
+		<div id="map"></div>
+	  </div>
+	</AuthenticatedLayout>
 </template>
 
-<script>
-export default {
-	name: 'GoogleMap',
-	props: {
-		initialMarkers: {
-			type: Array,
-			required: true,
-		},
-	},
-	data() {
-		return {
-			map: null,
-			activeInfoWindow: null,
-			markers: [],
-		};
-	},
-	mounted() {
-		// Load the Google Maps script
-		const api_key = import.meta.env.VITE_GMAPS_API_KEY;
-		const script = document.createElement('script');
-		script.src = `https://maps.googleapis.com/maps/api/js?key=${api_key}&callback=initMap`;
-		script.async = true;
-		script.defer = true;
-		window.initMap = this.initMap;
-		document.head.appendChild(script);
-	},
-	methods: {
-		async initMap() {
-			this.map = new google.maps.Map(document.getElementById('map'), {
-				center: {
-					lat: 39.6243,
-					lng: 19.9217
-				},
-				zoom: 15,
-			});
+  <script>
+  export default {
+	  name: 'GoogleMap',
+	  mounted() {
+		  window.initMap = this.initMap.bind(this);
 
-			this.map.addListener('click', this.mapClicked);
+		  const api_key = import.meta.env.VITE_GMAPS_API_KEY;
+		  const script = document.createElement('script');
+		  script.src = `https://maps.googleapis.com/maps/api/js?key=${api_key}&loading=async&callback=initMap`;
+		  script.async = true;
+		  script.onload = () => {
+			  console.log('Google Maps API script loaded.');
+		  };
+		  script.onerror = (error) => {
+			  console.error('Error loading Google Maps API script:', error);
+		  };
+		  document.head.appendChild(script);
+	  },
+	  methods: {
+		  async initMap() {
+			  console.log('initMap function is called');
+			  this.map = new google.maps.Map(document.getElementById('map'), {
+				  center: { lat: 39.6243, lng: 19.9217 },
+				  zoom: 15,
+			  });
 
-            try {
-                // Await the getMarkers function to resolve
-                let marks = await this.getMarkers();
-                this.displayMarkers(marks);
-            } catch (error) {
-                console.error('Error initializing markers:', error);
-            }
-		},
-        async getMarkers() {
-            try {
-                // const baseUrl = window.location.origin;
-                // const response = await axios.get(`${baseUrl}/get-locations`);
-                const response = await axios.get(`/training-project-2/public/get-locations`);
-                return response.data;
-            } catch (error) {
-                // Log and return the error
-                console.error('Error fetching markers:', error);
-                throw error;  // Rethrow error if you want to handle it elsewhere
-            }
-        },
-        async displayMarkers(marks) {
-            if (marks) {
-                alert('No locations to display.');
-                return this.markers = [];
-            }
+			  try {
+				  let marks = await this.getMarkers();
+				  this.displayMarkers(marks);
+			  } catch (error) {
+				  console.error('Error initializing markers:', error);
+			  }
+		  },
+		  async getMarkers() {
+			  try {
+				  const response = await axios.get(`/training-project-2/public/get-locations`);
+				  return response.data;
+			  } catch (error) {
+				  console.error('Error fetching markers:', error);
+				  throw error;
+			  }
+		  },
+		  async displayMarkers(marks) {
+			  if (!marks || marks.length === 0) {
+				  alert('No locations to display.');
+				  return;
+			  }
 
-            for (const marker of marks) {
-                console.log(marker.comment);
-                const mark = new google.maps.Marker({
-                    position: {lat: Number(marker.latitude), lng: Number(marker.longitude)},
-                    label: marker.comment,
-                    map: this.map,
-                });
-                console.log(marker);
-                this.markers.push(mark);
-            }
-        },
-		// mapClicked(event) {
-		// 	console.log(this.map);
-		// 	console.log(event.latLng.lat(), event.latLng.lng());
-		// },
-		// markerClicked(marker, index) {
-		// 	console.log(this.map);
-		// 	console.log(marker.position.lat());
-		// 	console.log(marker.position.lng());
-		// },
-		// markerDragEnd(event, index) {
-		// 	console.log(this.map);
-		// 	console.log(event.latLng.lat());
-		// 	console.log(event.latLng.lng());
-		// },
-	},
-};
-</script>
+			  for (const marker of marks) {
+				  const mark = new google.maps.Marker({
+					  position: { lat: Number(marker.latitude), lng: Number(marker.longitude) },
+					  label: marker.comment,
+					  map: this.map,
+				  });
+				  this.markers.push(mark);
+			  }
+		  }
+	  }
+  };
+  </script>
 
-<style>
-.text-center {
-  text-align: center;
-}
-#map {
-  width: 100%;
-  height: 400px;
-}
-</style>
+  <style>
+  .text-center {
+	text-align: center;
+  }
+  #map {
+	width: 100%;
+	height: 400px;
+  }
+  </style>
